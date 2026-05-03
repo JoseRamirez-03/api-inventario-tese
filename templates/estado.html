@@ -1,56 +1,32 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
-    <style>
-        .cuadro { width: 35px; height: 35px; border-radius: 5px; color: white; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: bold; }
-        .bg-0 { background: #28a745; } .bg-1 { background: #dc3545; } .bg-2 { background: #ffc107; }
-    </style>
-</head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <link rel="manifest" href="/static/manifest.json">
+    <title>Estado de Salas</title>
+    </head>
 <body>
-    <div class="celular-frame">
-        <header class="header-tese"><strong>Mapa de Salas</strong></header>
-        <div style="padding: 10px;">
-            <div style="display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; background: #eee; padding: 10px; border-radius: 10px; margin-bottom: 15px;">
-                {% for s in salas %}
-                <div class="cuadro bg-{{ s.estado }}">{{ s.numero }}</div>
-                {% endfor %}
+    <div class="app-container">
+        <header>ESTADO DE LABORATORIOS</header>
+        <div class="content">
+            {% for s in salas %}
+            <div class="card" style="border-left: 5px solid {% if s.estado == 0 %}#2ecc71{% elif s.estado == 1 %}#e74c3c{% else %}#f1c40f{% endif %};">
+                <div style="flex: 1;">
+                    <strong>Sala {{ s.numero }}</strong><br>
+                    <small>Docente: {{ s.docente }}</small>
+                </div>
+                <div style="font-weight: bold; color: #666;">
+                    {% if s.estado == 0 %}Libre{% elif s.estado == 1 %}Ocupada{% else %}Apartada{% endif %}
+                </div>
             </div>
-
-            <table style="width: 100%; font-size: 11px;">
-                <thead><tr><th>Sala</th><th>Estatus</th><th>Docente</th>{% if rol == 'docente' %}<th>Acción</th>{% endif %}</tr></thead>
-                <tbody>
-                    {% for s in salas %}
-                    <tr>
-                        <form method="POST">
-                            <input type="hidden" name="sala_id" value="{{ s.numero }}">
-                            <td>{{ s.numero }}</td>
-                            <td>
-                                {% if rol == 'docente' %}
-                                <select name="estatus">
-                                    <option value="0" {% if s.estado == 0 %}selected{% endif %}>Libre</option>
-                                    <option value="1" {% if s.estado == 1 %}selected{% endif %}>Ocupada</option>
-                                    <option value="2" {% if s.estado == 2 %}selected{% endif %}>Apartada</option>
-                                </select>
-                                {% else %}
-                                    {{ "Libre" if s.estado == 0 else "Ocupada" if s.estado == 1 else "Apartada" }}
-                                {% endif %}
-                            </td>
-                            <td>
-                                {% if rol == 'docente' %}
-                                <input type="text" name="docente_nombre" value="{{ s.docente }}" style="width: 60px;">
-                                {% else %}{{ s.docente }}{% endif %}
-                            </td>
-                            {% if rol == 'docente' %}
-                            <td><button type="submit" style="background: #003366; color: white; border: none; border-radius: 3px;">Ok</button></td>
-                            {% endif %}
-                        </form>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+            {% endfor %}
         </div>
-        <nav class="footer-nav"><a href="/panel">🏠</a><a href="/estado" style="color: #003366;">📊</a></nav>
+        <nav class="nav-bar">
+            <a href="/panel" class="nav-item">📋<br>Reportes</a>
+            <a href="/estado" class="nav-item active">🏫<br>Salas</a>
+            <a href="/salir" class="nav-item">🚪<br>Salir</a>
+        </nav>
     </div>
 </body>
 </html>
