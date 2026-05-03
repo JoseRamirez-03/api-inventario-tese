@@ -10,7 +10,6 @@ app.secret_key = 'tese_secret_key'
 # ==========================================
 #        CONEXIÓN A MONGODB ATLAS
 # ==========================================
-# Reemplaza TU_NUEVA_CONTRASEÑA_AQUI por tu contraseña real
 MONGO_URI = "mongodb+srv://jose1995jusn_db_user:Joseramirez04@joseadmin.gox5yvp.mongodb.net/InventarioTESE?appName=joseadmin"
 
 client = MongoClient(MONGO_URI, tlsCAFile=certifi.where())
@@ -33,7 +32,6 @@ ALUMNOS_PERMITIDOS = {
 # ==========================================
 #          RUTAS WEB (NAVEGADOR)
 # ==========================================
-
 @app.route('/')
 def login():
     return render_template('login.html')
@@ -43,7 +41,6 @@ def acceder():
     matricula = request.form.get('matricula')
     password = request.form.get('password')
     
-    # Verificamos si la matrícula existe en nuestro diccionario y si la contraseña coincide
     if matricula in ALUMNOS_PERMITIDOS and password == ALUMNOS_PERMITIDOS[matricula]:
         session['rol'] = 'alumno'
         return redirect(url_for('panel'))
@@ -58,7 +55,6 @@ def acceder():
 def panel():
     rol = session.get('rol')
     if not rol: return redirect(url_for('login'))
-    
     reportes = list(col_reportes.find())
     return render_template('panel.html', rol=rol, reportes=reportes)
 
@@ -74,32 +70,27 @@ def nuevo_reporte():
         }
         col_reportes.insert_one(nuevo_doc)
         return redirect(url_for('panel'))
-        
     return render_template('nuevo_reporte.html')
 
 @app.route('/detalle/<id_reporte>', methods=['GET', 'POST'])
 def detalle(id_reporte):
     rol = session.get('rol')
     reporte = col_reportes.find_one({"_id": ObjectId(id_reporte)})
-    
     if request.method == 'POST' and rol == 'docente':
         nuevo_est = request.form.get('nuevo_estatus')
         col_reportes.update_one({"_id": ObjectId(id_reporte)}, {"$set": {"estatus": nuevo_est}})
         return redirect(url_for('panel'))
-        
     return render_template('detalle.html', rol=rol, r=reporte)
 
 @app.route('/estado', methods=['GET', 'POST'])
 def estado():
     rol = session.get('rol')
-    
     if request.method == 'POST' and rol == 'docente':
         sala_id = request.form.get('sala_id')
         nuevo_est = int(request.form.get('estatus'))
         nom_docente = request.form.get('docente_nombre')
         col_salas.update_one({"numero": sala_id}, {"$set": {"estado": nuevo_est, "docente": nom_docente}})
         return redirect(url_for('estado'))
-
     salas = list(col_salas.find().sort("numero", 1))
     return render_template('estado.html', rol=rol, salas=salas)
 
@@ -109,47 +100,17 @@ def salir():
     return redirect(url_for('login'))
 
 # ==========================================
-#          RUTAS DE LA API (MÓVIL)
+#          RUTAS DE LA API Y PWA
 # ==========================================
-
-@app.route('/api/login', methods=['POST'])
-def api_login():
-    datos = request.json
-    matricula = datos.get('matricula')
-    password = datos.get('password')
-    
-    # Validamos con la nueva lista para las apps móviles
-    if matricula in ALUMNOS_PERMITIDOS and password == ALUMNOS_PERMITIDOS[matricula]:
-        return jsonify({"status": "success", "rol": "alumno"})
-    elif matricula == "ADM001" and password == "docente":
-        return jsonify({"status": "success", "rol": "docente"})
-    else:
-        return jsonify({"status": "error", "mensaje": "Credenciales incorrectas"}), 401
-
-@app.route('/api/salas', methods=['GET'])
+@app.route('/api/salas')
 def api_salas():
     salas = list(col_salas.find({}, {'_id': 0}).sort("numero", 1))
     return jsonify({"status": "success", "salas": salas})
 
-@app.route('/api/reportes', methods=['GET'])
-def api_reportes():
-    reportes = list(col_reportes.find())
-    for r in reportes:
-        r['_id'] = str(r['_id'])
-    return jsonify({"status": "success", "reportes": reportes})
-
-@app.route('/api/nuevo-reporte', methods=['POST'])
-def api_nuevo_reporte():
-    datos = request.json
-    nuevo_doc = {
-        "alumno": datos.get('alumno'),
-        "sala": datos.get('sala'),
-        "maquina": datos.get('maquina'),
-        "falla": datos.get('falla'),
-        "estatus": "Pendiente"
-    }
-    col_reportes.insert_one(nuevo_doc)
-    return jsonify({"status": "success", "mensaje": "Reporte creado exitosamente"})
+# ESTA ES LA RUTA NUEVA PARA QUE FUNCIONE LA APLICACIÓN MÓVIL (PWA)
+@app.route('/sw.js')
+def sw():
+    return app.send_static_file('sw.js')
 
 if __name__ == '__main__':
     app.run(debug=True)
