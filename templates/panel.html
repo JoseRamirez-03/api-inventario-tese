@@ -3,78 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Panel | TESE</title>
     <link rel="manifest" href="/static/manifest.json">
-    <meta name="theme-color" content="#003366">
-    <style>
-        body {
-            margin: 0;
-            background-color: #f8f9fa;
-            font-family: sans-serif;
-        }
-        header {
-            background-color: #003366;
-            color: white;
-            padding: 20px;
-            text-align: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        .container {
-            padding: 15px;
-            max-width: 600px;
-            margin: auto;
-        }
-        .btn-nuevo {
-            display: block;
-            width: 100%;
-            background-color: #0056b3;
-            color: white;
-            padding: 15px;
-            text-align: center;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-        .reporte-card {
-            background: white;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 12px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            display: flex;
-            align-items: center;
-            text-decoration: none;
-            color: #333;
-        }
-        .status-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            margin-right: 15px;
-        }
-        .info h4 { margin: 0; color: #003366; }
-        .info p { margin: 5px 0 0; font-size: 14px; color: #777; }
-    </style>
-</head>
+    <title>Panel TESE</title>
+    </head>
 <body>
-    <header>
-        <h3>Bitácora de Reportes</h3>
-    </header>
-    <div class="container">
-        <a href="/nuevo-reporte" class="btn-nuevo">+ Generar Nuevo Reporte</a>
-        
-        {% for r in reportes %}
-        <a href="/detalle/{{ r._id }}" class="reporte-card">
-            <div class="status-dot" style="background-color: {% if r.estatus == 'Pendiente' %}#dc3545{% else %}#ffc107{% endif %};"></div>
-            <div class="info">
-                <h4>{{ r.sala }} - {{ r.maquina }}</h4>
-                <p>{{ r.falla[:40] }}...</p>
-            </div>
-        </a>
-        {% endfor %}
+    <div class="app-container">
+        <header>BITÁCORA DE REPORTES</header>
+        <div class="content">
+            <a href="/nuevo-reporte" class="btn-primary">+ Generar Nuevo Reporte</a>
+            {% for r in reportes %}
+            <a href="/detalle/{{ r._id }}" class="card">
+                <div class="dot" style="background: {% if r.estatus == 'Pendiente' %}#ff4d4d{% else %}#ffcc00{% endif %};"></div>
+                <div>
+                    <strong>{{ r.sala }} - {{ r.maquina }}</strong><br>
+                    <small style="color: #666;">{{ r.falla[:35] }}...</small>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+
+        <nav class="nav-bar">
+            <a href="/panel" class="nav-item active">📋<br>Reportes</a>
+            <a href="/estado" class="nav-item">🏫<br>Salas</a>
+            <a href="/salir" class="nav-item">🚪<br>Salir</a>
+        </nav>
     </div>
 </body>
 </html>
