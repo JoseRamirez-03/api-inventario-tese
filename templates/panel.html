@@ -1,43 +1,80 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Panel | TESE</title>
+    <link rel="manifest" href="/static/manifest.json">
+    <meta name="theme-color" content="#003366">
+    <style>
+        body {
+            margin: 0;
+            background-color: #f8f9fa;
+            font-family: sans-serif;
+        }
+        header {
+            background-color: #003366;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .container {
+            padding: 15px;
+            max-width: 600px;
+            margin: auto;
+        }
+        .btn-nuevo {
+            display: block;
+            width: 100%;
+            background-color: #0056b3;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .reporte-card {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #333;
+        }
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+        .info h4 { margin: 0; color: #003366; }
+        .info p { margin: 5px 0 0; font-size: 14px; color: #777; }
+    </style>
 </head>
 <body>
-    <div class="celular-frame">
-        <header class="header-tese">
-            <strong>TESE - {{ rol.upper() }}</strong>
-            <a href="/salir" style="text-decoration: none;">❌</a>
-        </header>
-
-        {% if rol == 'alumno' %}
-        <div style="padding: 15px; text-align: center; border-bottom: 1px solid #ddd;">
-            <a href="/nuevo-reporte" style="display: block; background: #003366; color: white; text-decoration: none; padding: 12px; border-radius: 10px; font-weight: bold;">➕ GENERAR REPORTE</a>
-        </div>
-        {% endif %}
-
-        <h4 style="margin: 15px;">Bitácora de Reportes</h4>
+    <header>
+        <h3>Bitácora de Reportes</h3>
+    </header>
+    <div class="container">
+        <a href="/nuevo-reporte" class="btn-nuevo">+ Generar Nuevo Reporte</a>
+        
         {% for r in reportes %}
-        <a href="/detalle/{{ r._id }}" style="text-decoration: none; color: black;">
-            <div class="card-reporte">
-                <div class="icono-pieza">🖥️</div>
-                <div>
-                    <small>Sala {{ r.sala }} - PC {{ r.maquina }}</small><br>
-                    <strong>{{ r.falla[:25] }}...</strong><br>
-                    <span class="{% if r.estatus == 'Pendiente' %}status-pend{% elif r.estatus == 'En Reparación' %}status-proc{% else %}status-listo{% endif %}">
-    ● {{ r.estatus }}
-</span>
-                        ● {{ r.estatus }}
-                    </span>
-                </div>
+        <a href="/detalle/{{ r._id }}" class="reporte-card">
+            <div class="status-dot" style="background-color: {% if r.estatus == 'Pendiente' %}#dc3545{% else %}#ffc107{% endif %};"></div>
+            <div class="info">
+                <h4>{{ r.sala }} - {{ r.maquina }}</h4>
+                <p>{{ r.falla[:40] }}...</p>
             </div>
         </a>
         {% endfor %}
-
-        <nav class="footer-nav">
-            <a href="/panel" style="color: #003366;">🏠</a>
-            <a href="/estado">📊</a>
-        </nav>
     </div>
 </body>
 </html>
