@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
+</head>
+<body>
+    <div class="celular-frame">
+        <header class="header-tese"><a href="/panel" style="text-decoration:none">⬅️</a> <strong>Detalle de Falla</strong></header>
+        <div style="padding: 20px;">
+            <p><strong>Alumno:</strong> {{ r.alumno }}</p>
+            <p><strong>Ubicación:</strong> Sala {{ r.sala }} - PC {{ r.maquina }}</p>
+            <p style="background: #f9f9f9; padding: 10px; border-radius: 5px;"><strong>Falla:</strong> {{ r.falla }}</p>
+            <hr>
+            {% if rol == 'docente' %}
+            <form method="POST">
+                <label>Actualizar estatus de reparación:</label>
+                <select name="nuevo_estatus" style="width: 100%; padding: 10px; margin: 15px 0;">
+                    <option value="Pendiente" {% if r.estatus == 'Pendiente' %}selected{% endif %}>Pendiente (Rojo)</option>
+                    <option value="En Reparación" {% if r.estatus == 'En Reparación' %}selected{% endif %}>En Reparación (Naranja)</option>
+                    <option value="Reparada" {% if r.estatus == 'Reparada' %}selected{% endif %}>Reparada (Verde)</option>
+                </select>
+                <button type="submit" style="width: 100%; background: #28a745; color: white; padding: 12px; border: none; border-radius: 5px; font-weight: bold;">GUARDAR CAMBIO</button>
+            </form>
+            {% else %}
+            <div style="text-align: center; padding: 10px; background: #eef; border-radius: 10px;">
+                <strong>Estatus actual:</strong> {{ r.estatus }}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

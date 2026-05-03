@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
+</head>
+<body>
+    <div class="celular-frame">
+        <header class="header-tese">
+            <strong>TESE - {{ rol.upper() }}</strong>
+            <a href="/salir" style="text-decoration: none;">❌</a>
+        </header>
+
+        {% if rol == 'alumno' %}
+        <div style="padding: 15px; text-align: center; border-bottom: 1px solid #ddd;">
+            <a href="/nuevo-reporte" style="display: block; background: #003366; color: white; text-decoration: none; padding: 12px; border-radius: 10px; font-weight: bold;">➕ GENERAR REPORTE</a>
+        </div>
+        {% endif %}
+
+        <h4 style="margin: 15px;">Bitácora de Reportes</h4>
+        {% for r in reportes %}
+        <a href="/detalle/{{ r._id }}" style="text-decoration: none; color: black;">
+            <div class="card-reporte">
+                <div class="icono-pieza">🖥️</div>
+                <div>
+                    <small>Sala {{ r.sala }} - PC {{ r.maquina }}</small><br>
+                    <strong>{{ r.falla[:25] }}...</strong><br>
+                    <span class="{% if r.estatus == 'Pendiente' %}status-pend{% elif r.estatus == 'En Reparación' %}status-proc{% else %}status-listo{% endif %}">
+    ● {{ r.estatus }}
+</span>
+                        ● {{ r.estatus }}
+                    </span>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+
+        <nav class="footer-nav">
+            <a href="/panel" style="color: #003366;">🏠</a>
+            <a href="/estado">📊</a>
+        </nav>
+    </div>
+</body>
+</html>
