@@ -2,77 +2,91 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acceso | Inventario TESE</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Inventario TESE</title>
     
-    <!-- ========================================== -->
-    <!-- ESTO ES LO QUE LO CONVIERTE EN APP MÓVIL   -->
-    <!-- ========================================== -->
     <link rel="manifest" href="/static/manifest.json">
     <meta name="theme-color" content="#003366">
-    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2206/2206232.png">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js')
-            .then(() => console.log("Service Worker Registrado Exitosamente"));
+          navigator.serviceWorker.register('/sw.js');
         });
       }
     </script>
-    <!-- ========================================== -->
 
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f4f4f4;
+        }
+        .login-wrapper {
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            margin: 0;
+            width: 100%;
         }
         .login-container {
             background-color: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
             width: 100%;
-            max-width: 350px;
-            text-align: center;
-        }
-        h2 { color: #003366; }
-        input[type="text"], input[type="password"] {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            max-width: 400px; /* Tamaño ideal para móvil */
+            height: 100%;     /* Ocupa todo el alto en móvil */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 40px;
             box-sizing: border-box;
+        }
+        @media (min-width: 600px) {
+            .login-container {
+                height: auto;
+                border-radius: 12px;
+                box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            }
+        }
+        h2 { color: #003366; margin-bottom: 5px; }
+        p { color: #666; margin-bottom: 30px; }
+        input {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 16px;
         }
         button {
             width: 100%;
-            padding: 10px;
+            padding: 15px;
             background-color: #003366;
             color: white;
             border: none;
-            border-radius: 5px;
-            cursor: pointer;
+            border-radius: 8px;
+            font-size: 18px;
             font-weight: bold;
+            margin-top: 20px;
+            cursor: pointer;
         }
-        button:hover { background-color: #002244; }
     </style>
 </head>
 <body>
-
-<div class="login-container">
-    <h2>Sistema de Inventario TESE</h2>
-    <p>Ingresa tus credenciales</p>
-    <form action="/acceder" method="POST">
-        <input type="text" name="matricula" placeholder="Matrícula o Usuario" required>
-        <input type="password" name="password" placeholder="Contraseña" required>
-        <button type="submit">Ingresar</button>
-    </form>
-</div>
-
+    <div class="login-wrapper">
+        <div class="login-container">
+            <h2>Inventario TESE</h2>
+            <p>Inicia sesión para continuar</p>
+            <form action="/acceder" method="POST">
+                <input type="text" name="matricula" placeholder="Matrícula" required>
+                <input type="password" name="password" placeholder="Contraseña" required>
+                <button type="submit">Entrar al Sistema</button>
+            </form>
+        </div>
+    </div>
 </body>
 </html>
