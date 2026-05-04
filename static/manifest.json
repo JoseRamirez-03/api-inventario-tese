@@ -8,13 +8,13 @@
   "orientation": "portrait",
   "icons": [
     {
-      "src": "https://dummyimage.com/192x192/003366/ffffff.png&text=TESE",
+      "src": "/static/icono.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "https://dummyimage.com/512x512/003366/ffffff.png&text=TESE",
+      "src": "/static/icono.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
