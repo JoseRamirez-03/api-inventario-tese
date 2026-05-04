@@ -1,7 +1,15 @@
+const CACHE_NAME = 'tese-cache-v1';
+
 self.addEventListener('install', (e) => {
-  console.log('[Service Worker] Instalado exitosamente en el dispositivo');
+  e.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => {
+      return cache.addAll(['/']);
+    })
+  );
 });
 
 self.addEventListener('fetch', (e) => {
-  // Se deja en blanco intencionalmente para la PWA básica
+  e.respondWith(
+    fetch(e.request).catch(() => caches.match(e.request))
+  );
 });
