@@ -89,8 +89,18 @@ def estado():
         sala_id = request.form.get('sala_id')
         nuevo_est = int(request.form.get('estatus'))
         nom_docente = request.form.get('docente_nombre')
-        col_salas.update_one({"numero": sala_id}, {"$set": {"estado": nuevo_est, "docente": nom_docente}})
+        horario = request.form.get('horario') # <--- NUEVO CAMPO
+        
+        col_salas.update_one(
+            {"numero": sala_id}, 
+            {"$set": {
+                "estado": nuevo_est, 
+                "docente": nom_docente,
+                "horario": horario
+            }}
+        )
         return redirect(url_for('estado'))
+        
     salas = list(col_salas.find().sort("numero", 1))
     return render_template('estado.html', rol=rol, salas=salas)
 
